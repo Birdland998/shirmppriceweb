@@ -1,0 +1,45 @@
+{
+    "version": 2,
+    "name": "shrimp-price-frontend",
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "dist"
+        }
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/(.*)",
+        "destination": "/index.html"
+      }
+    ],
+    "env": {
+      "VITE_APP_NAME": "ราคากุ้ง 22 ไซต์",
+      "VITE_APP_VERSION": "2.0.0",
+      "VITE_API_URL": "https://hammerhead-app-2s5sw.ondigitalocean.app/"
+    },
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
+          },
+          {
+            "key": "X-XSS-Protection",
+            "value": "1; mode=block"
+          }
+        ]
+      }
+    ],
+    "cleanUrls": true,
+    "trailingSlash": false
+} 

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🦐 ราคากุ้ง 22 ไซต์ - React App</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            shrimp: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#3498db',
+              600: '#2980b9',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            coral: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              200: '#fecaca',
+              300: '#fca5a5',
+              400: '#f87171',
+              500: '#e74c3c',
+              600: '#dc2626',
+              700: '#b91c1c',
+              800: '#991b1b',
+              900: '#7f1d1d',
+            },
+            ocean: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#27ae60',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          },
+          fontFamily: {
+            sans: ['Prompt', 'Inter', 'system-ui', 'sans-serif'],
+            display: ['Prompt', 'Inter', 'sans-serif'],
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-in-out',
+            'fade-in-up': 'fadeInUp 0.6s ease-out',
+            'fade-in-down': 'fadeInDown 0.6s ease-out',
+            'slide-in-left': 'slideInLeft 0.5s ease-out',
+            'slide-in-right': 'slideInRight 0.5s ease-out',
+            'bounce-slow': 'bounce 2s infinite',
+            'pulse-slow': 'pulse 3s infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'shimmer': 'shimmer 2s linear infinite',
+            'scale-in': 'scaleIn 0.3s ease-out',
+            'wiggle': 'wiggle 1s ease-in-out infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(30px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            fadeInDown: {
+              '0%': { opacity: '0', transform: 'translateY(-30px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            slideInLeft: {
+              '0%': { opacity: '0', transform: 'translateX(-30px)' },
+              '100%': { opacity: '1', transform: 'translateX(0)' },
+            },
+            slideInRight: {
+              '0%': { opacity: '0', transform: 'translateX(30px)' },
+              '100%': { opacity: '1', transform: 'translateX(0)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            shimmer: {
+              '0%': { transform: 'translateX(-100%)' },
+              '100%': { transform: 'translateX(100%)' },
+            },
+            scaleIn: {
+              '0%': { opacity: '0', transform: 'scale(0.9)' },
+              '100%': { opacity: '1', transform: 'scale(1)' },
+            },
+            wiggle: {
+              '0%, 100%': { transform: 'rotate(-3deg)' },
+              '50%': { transform: 'rotate(3deg)' },
+            }
+          },
+          boxShadow: {
+            'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            'medium': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            'large': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+            'glow': '0 0 20px rgba(52, 152, 219, 0.3)',
+            'glow-coral': '0 0 20px rgba(231, 76, 60, 0.3)',
+            'glow-ocean': '0 0 20px rgba(39, 174, 96, 0.3)',
+          }
+        },
+      },
+    }
+  </script>
+  
+  <!-- Meta Tags -->
+  <meta name="description" content="ติดตามราคากุ้งทุกไซต์แบบเรียลไทม์ด้วย React + Vite" />
+  <meta name="keywords" content="ราคากุ้ง, กุ้ง, ราคา, ตลาด, เรียลไทม์" />
+  <meta name="author" content="Shrimp Price App" />
+  <meta name="theme-color" content="#3498db" />
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="ราคากุ้ง 22 ไซต์" />
+  <meta property="og:description" content="ติดตามราคากุ้งแบบเรียลไทม์" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/shrimp-og.png" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦐</text></svg>" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Heroicons (CDN) -->
+  <script type="module">
+    // Import Heroicons from CDN for React components
+    window.HeroiconsOutline = {}
+    window.HeroiconsSolid = {}
+  </script>
+  
+  <!-- Custom Styles -->
+  <style>
+    body {
+      font-family: 'Prompt', 'Inter', system-ui, sans-serif;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgb(241 245 249);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: rgb(52 152 219);
+      border-radius: 3px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgb(41 128 185);
+    }
+    
+    /* Smooth transitions */
+    * {
+      transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 150ms;
+    }
+    
+    /* Focus improvements */
+    *:focus {
+      outline: 2px solid rgb(52 152 219);
+      outline-offset: 2px;
+    }
+    
+    /* Loading shimmer effect */
+    .loading-shimmer {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite linear;
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    /* Glass effect */
+    .glass {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Text shadow utilities */
+    .text-shadow {
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .text-shadow-lg {
+      text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Performance optimizations */
+    .will-change-transform {
+      will-change: transform;
+    }
+    
+    .will-change-opacity {
+      will-change: opacity;
+    }
+    
+    /* Print styles */
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+    }
+    
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body class="font-sans antialiased bg-gray-50">
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

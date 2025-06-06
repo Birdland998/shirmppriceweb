@@ -1,0 +1,66 @@
+/* Minimal CSS - Tailwind is loaded from CDN */
+
+/* Base reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Custom component classes for React components */
+.btn-primary {
+  @apply bg-gradient-to-r from-shrimp-500 to-shrimp-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300;
+}
+
+.btn-secondary {
+  @apply bg-white text-shrimp-600 border-2 border-shrimp-500 px-6 py-3 rounded-xl font-semibold hover:bg-shrimp-50 transition-all duration-300;
+}
+
+.card {
+  @apply bg-white rounded-xl shadow-soft hover:shadow-medium transition-all duration-300 border border-gray-100;
+}
+
+.card-interactive {
+  @apply card hover:scale-105 hover:-translate-y-2 cursor-pointer;
+}
+
+.text-gradient {
+  @apply bg-gradient-to-r from-shrimp-600 to-shrimp-500 bg-clip-text text-transparent;
+}
+
+.glass {
+  @apply bg-white/80 backdrop-blur-md border border-white/20;
+}
+
+.status-dot {
+  @apply relative inline-block w-3 h-3 rounded-full;
+}
+
+.status-dot::after {
+  @apply absolute inset-0 rounded-full animate-ping;
+  content: '';
+}
+
+.status-up {
+  @apply bg-ocean-500;
+}
+
+.status-up::after {
+  @apply bg-ocean-500 opacity-75;
+}
+
+.status-down {
+  @apply bg-coral-500;
+}
+
+.status-down::after {
+  @apply bg-coral-500 opacity-75;
+}
+
+.status-stable {
+  @apply bg-amber-500;
+}
+
+.status-stable::after {
+  @apply bg-amber-500 opacity-75;
+}
