@@ -1,0 +1,432 @@
+import React, { useState, useRef } from 'react';
+import { Heart, MessageCircle, Send, Camera, Type, Bot, User, Clock, Plus, Image as ImageIcon } from 'lucide-react';
+
+const ShrimpFarmDashboard = () => {
+  const [posts, setPosts] = useState([
+    {
+      id: 1,
+      author: "ShrimpMaster99",
+      avatar: "🦐",
+      timestamp: "2h",
+      content: "My shrimp are showing white spots on their shells. Water parameters seem normal. pH: 7.2, temp: 76°F. Anyone experienced this before?",
+      image: null,
+      likes: 12,
+      userLiked: false,
+      comments: [
+        {
+          id: 1,
+          author: "AI Assistant",
+          isAI: true,
+          avatar: "🤖",
+          timestamp: "2h",
+          content: "Based on your description, the white spots could indicate bacterial infection or molting preparation. Check ammonia levels and consider quarantining affected shrimp. Monitor for shell softening which indicates molting.",
+          likes: 8,
+          userLiked: false
+        },
+        {
+          id: 2,
+          author: "AquaExpert",
+          isAI: false,
+          avatar: "🐠",
+          timestamp: "1h",
+          content: "I had similar issue last month. Turned out to be early molting signs. Keep water extra clean during this period!",
+          likes: 5,
+          userLiked: true
+        }
+      ]
+    },
+    {
+      id: 2,
+      author: "NeoCaridina_Lover",
+      avatar: "🦂",
+      timestamp: "5h",
+      content: "Check out my breeding setup! Finally got the parameters perfect.",
+      image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23e3f2fd'/%3E%3Crect x='50' y='50' width='300' height='200' rx='10' fill='%2381c784' opacity='0.3'/%3E%3Ctext x='200' y='160' text-anchor='middle' font-family='Arial' font-size='16' fill='%23333'%3EShrimp Tank Setup%3C/text%3E%3Ccircle cx='120' cy='120' r='8' fill='%23ff5722'/%3E%3Ccircle cx='280' cy='180' r='6' fill='%23ff5722'/%3E%3Ccircle cx='150' cy='200' r='7' fill='%23ff5722'/%3E%3C/svg%3E",
+      likes: 24,
+      userLiked: true,
+      comments: [
+        {
+          id: 3,
+          author: "AI Assistant",
+          isAI: true,
+          avatar: "🤖",
+          timestamp: "4h",
+          content: "Excellent setup! I can see good plant coverage and proper spacing. The water clarity looks optimal for Neocaridina breeding. Consider adding more hiding spots for juveniles to increase survival rates.",
+          likes: 15,
+          userLiked: false
+        }
+      ]
+    }
+  ]);
+
+  const [newPost, setNewPost] = useState({ content: '', image: null });
+  const [newComment, setNewComment] = useState({});
+  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [activePostType, setActivePostType] = useState('text');
+  const fileInputRef = useRef(null);
+
+  // Simulate AI response generation
+  const generateAIResponse = (postContent, hasImage) => {
+    const responses = [
+      "Based on the symptoms described, this could be related to water quality. I recommend testing ammonia, nitrites, and nitrates. Consider a partial water change and monitor closely.",
+      "This appears to be a common issue in shrimp keeping. Check your feeding schedule and ensure you're not overfeeding. Excess food can cause water quality issues.",
+      "The image shows good tank conditions. For optimal shrimp health, maintain stable parameters and consider adding more biofilm surfaces for grazing.",
+      "These symptoms suggest possible stress from recent changes. Keep conditions stable and avoid sudden parameter shifts. Monitor behavior patterns.",
+      "Great setup! Consider adding Indian almond leaves for natural pH buffering and beneficial tannins that shrimp love."
+    ];
+    
+    if (hasImage) {
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+    
+    if (postContent.toLowerCase().includes('white spots') || postContent.toLowerCase().includes('sick')) {
+      return "Based on the symptoms described, this could be related to bacterial infection or molting. Check water parameters (ammonia, nitrites, pH) and consider quarantining affected shrimp if symptoms persist.";
+    }
+    
+    if (postContent.toLowerCase().includes('breeding') || postContent.toLowerCase().includes('eggs')) {
+      return "For successful breeding, maintain stable water parameters, provide plenty of biofilm, and ensure adequate hiding spots for juveniles. Temperature around 72-78°F is optimal for most Neocaridina species.";
+    }
+    
+    return responses[Math.floor(Math.random() * responses.length)];
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setNewPost(prev => ({ ...prev, image: e.target.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmitPost = () => {
+    if (!newPost.content.trim() && !newPost.image) return;
+
+    const post = {
+      id: Date.now(),
+      author: "You",
+      avatar: "👤",
+      timestamp: "now",
+      content: newPost.content,
+      image: newPost.image,
+      likes: 0,
+      userLiked: false,
+      comments: []
+    };
+
+    // Add AI response
+    setTimeout(() => {
+      const aiComment = {
+        id: Date.now() + 1,
+        author: "AI Assistant",
+        isAI: true,
+        avatar: "🤖",
+        timestamp: "now",
+        content: generateAIResponse(newPost.content, !!newPost.image),
+        likes: 0,
+        userLiked: false
+      };
+
+      setPosts(prevPosts => 
+        prevPosts.map(p => 
+          p.id === post.id 
+            ? { ...p, comments: [aiComment, ...p.comments] }
+            : p
+        )
+      );
+    }, 2000);
+
+    setPosts(prev => [post, ...prev]);
+    setNewPost({ content: '', image: null });
+    setShowCreatePost(false);
+    setActivePostType('text');
+  };
+
+  const handleLike = (postId, commentId = null) => {
+    setPosts(prev => prev.map(post => {
+      if (post.id === postId) {
+        if (commentId) {
+          return {
+            ...post,
+            comments: post.comments.map(comment => 
+              comment.id === commentId
+                ? { 
+                    ...comment, 
+                    likes: comment.userLiked ? comment.likes - 1 : comment.likes + 1,
+                    userLiked: !comment.userLiked 
+                  }
+                : comment
+            )
+          };
+        } else {
+          return {
+            ...post,
+            likes: post.userLiked ? post.likes - 1 : post.likes + 1,
+            userLiked: !post.userLiked
+          };
+        }
+      }
+      return post;
+    }));
+  };
+
+  const handleComment = (postId) => {
+    const commentContent = newComment[postId];
+    if (!commentContent?.trim()) return;
+
+    const comment = {
+      id: Date.now(),
+      author: "You",
+      isAI: false,
+      avatar: "👤",
+      timestamp: "now",
+      content: commentContent,
+      likes: 0,
+      userLiked: false
+    };
+
+    setPosts(prev => prev.map(post => 
+      post.id === postId 
+        ? { ...post, comments: [...post.comments, comment] }
+        : post
+    ));
+
+    setNewComment(prev => ({ ...prev, [postId]: '' }));
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 pb-20">
+      {/* Mobile Header */}
+      <header className="sticky top-0 z-50 bg-white shadow-md border-b-2 border-cyan-200">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="text-2xl">🦐</div>
+              <div>
+                <h1 className="text-lg font-bold text-gray-800">ShrimpFarm</h1>
+                <p className="text-xs text-gray-600">AI Community</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowCreatePost(!showCreatePost)}
+              className="bg-cyan-500 hover:bg-cyan-600 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all active:scale-95"
+            >
+              <Plus size={20} />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="px-3 py-4">
+        {/* Mobile Create Post Modal */}
+        {showCreatePost && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
+            <div className="bg-white w-full rounded-t-3xl p-4 animate-slide-up max-h-[80vh] overflow-y-auto">
+              <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4"></div>
+              <h2 className="text-lg font-semibold mb-4 text-gray-800">Share Your Experience</h2>
+              
+              <div className="flex gap-2 mb-4">
+                <button
+                  onClick={() => setActivePostType('text')}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-xl flex-1 justify-center transition-all ${
+                    activePostType === 'text' 
+                      ? 'bg-cyan-500 text-white' 
+                      : 'bg-gray-100 text-gray-700'
+                  }`}
+                >
+                  <Type size={18} />
+                  Text
+                </button>
+                <button
+                  onClick={() => setActivePostType('image')}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-xl flex-1 justify-center transition-all ${
+                    activePostType === 'image' 
+                      ? 'bg-cyan-500 text-white' 
+                      : 'bg-gray-100 text-gray-700'
+                  }`}
+                >
+                  <Camera size={18} />
+                  Image
+                </button>
+              </div>
+
+              <textarea
+                value={newPost.content}
+                onChange={(e) => setNewPost(prev => ({ ...prev, content: e.target.value }))}
+                placeholder="Describe your shrimp farming question or share your experience..."
+                className="w-full p-4 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-base"
+                rows={4}
+              />
+
+              {activePostType === 'image' && (
+                <div className="mt-4">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex items-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors w-full justify-center"
+                  >
+                    <ImageIcon size={18} />
+                    Upload Image
+                  </button>
+                  {newPost.image && (
+                    <div className="mt-3">
+                      <img src={newPost.image} alt="Upload preview" className="w-full rounded-xl" />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={() => setShowCreatePost(false)}
+                  className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSubmitPost}
+                  disabled={!newPost.content.trim() && !newPost.image}
+                  className="flex-1 bg-cyan-500 hover:bg-cyan-600 disabled:bg-gray-300 text-white py-3 rounded-xl font-medium transition-colors"
+                >
+                  Post
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Posts Feed */}
+        <div className="space-y-4">
+          {posts.map(post => (
+            <div key={post.id} className="bg-white rounded-2xl shadow-lg border border-cyan-100 overflow-hidden">
+              {/* Post Header */}
+              <div className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="text-xl">{post.avatar}</div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-gray-800 text-sm">{post.author}</span>
+                      <User size={12} className="text-gray-400" />
+                    </div>
+                    <div className="flex items-center gap-1 text-xs text-gray-500">
+                      <Clock size={10} />
+                      {post.timestamp}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Post Content */}
+                <p className="text-gray-800 mb-3 text-sm leading-relaxed">{post.content}</p>
+                {post.image && (
+                  <img src={post.image} alt="Post content" className="rounded-xl w-full mb-3" />
+                )}
+
+                {/* Post Actions */}
+                <div className="flex items-center gap-6 pt-3 border-t border-gray-100">
+                  <button
+                    onClick={() => handleLike(post.id)}
+                    className={`flex items-center gap-2 transition-colors active:scale-95 ${
+                      post.userLiked ? 'text-red-500' : 'text-gray-500'
+                    }`}
+                  >
+                    <Heart size={20} fill={post.userLiked ? 'currentColor' : 'none'} />
+                    <span className="text-sm font-medium">{post.likes}</span>
+                  </button>
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <MessageCircle size={20} />
+                    <span className="text-sm font-medium">{post.comments.length}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Comments */}
+              {post.comments.length > 0 && (
+                <div className="border-t border-gray-100 bg-gray-50">
+                  {post.comments.map(comment => (
+                    <div key={comment.id} className="p-4 border-b border-gray-100 last:border-b-0">
+                      <div className="flex items-start gap-3">
+                        <div className="text-lg flex-shrink-0">{comment.avatar}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <span className="font-medium text-gray-800 text-sm">{comment.author}</span>
+                            {comment.isAI && (
+                              <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                                <Bot size={8} />
+                                AI
+                              </span>
+                            )}
+                            <span className="text-xs text-gray-500">{comment.timestamp}</span>
+                          </div>
+                          <p className={`text-gray-800 text-sm leading-relaxed ${
+                            comment.isAI ? 'bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400' : ''
+                          }`}>
+                            {comment.content}
+                          </p>
+                          <button
+                            onClick={() => handleLike(post.id, comment.id)}
+                            className={`flex items-center gap-1 mt-2 text-xs transition-colors active:scale-95 ${
+                              comment.userLiked ? 'text-red-500' : 'text-gray-500'
+                            }`}
+                          >
+                            <Heart size={14} fill={comment.userLiked ? 'currentColor' : 'none'} />
+                            {comment.likes}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Mobile Add Comment */}
+              <div className="p-3 bg-gray-50 border-t border-gray-100">
+                <div className="flex gap-2">
+                  <div className="text-lg flex-shrink-0">👤</div>
+                  <div className="flex-1 flex gap-2">
+                    <input
+                      value={newComment[post.id] || ''}
+                      onChange={(e) => setNewComment(prev => ({ ...prev, [post.id]: e.target.value }))}
+                      placeholder="Add a comment..."
+                      className="flex-1 px-3 py-2 border border-gray-200 rounded-full focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-sm"
+                      onKeyPress={(e) => e.key === 'Enter' && handleComment(post.id)}
+                    />
+                    <button
+                      onClick={() => handleComment(post.id)}
+                      className="bg-cyan-500 hover:bg-cyan-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors active:scale-95"
+                    >
+                      <Send size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes slide-up {
+          from {
+            transform: translateY(100%);
+          }
+          to {
+            transform: translateY(0);
+          }
+        }
+        .animate-slide-up {
+          animation: slide-up 0.3s ease-out;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default ShrimpFarmDashboard;
